@@ -60,12 +60,53 @@ function purchase_supply(game_state: User_Inventory, item: Supply, amount: numbe
     game_state.Expenses = round2(game_state.Expenses + total_cost);
     supplies[item] += amount;
 }
-function lemonade_sale(game_state: User_Inventory, amount: number, price_lemonade: number): void {
-    const sale = Math.floor(Math.random() * (amount + 1));
+
+function cups_makeable(): number {
+    return Math.min(...Supply_LIST.map(item => Math.floor(supplies[item] / RECIPE[item])));
+}
+
+function weather() Weather {
+    const options: Weather[] = ['hot', 'normal', 'cold'];
+    return options[Math.floor(Math.random() * options.length)];
+}
+function lemonade_sale(game_state: User_Inventory, amount: number, price_lemonade: number, multiplier: number): void {
+    const demand = Math.round((10 + Math.floor(Math.random() * 21)) * multiplier); 
+    const sale = Math.min(demand, amount);
     const revenue = sale * price_lemonade;
     game_state.Glasses_sold = sale;
     game_state.Income += revenue;
     game_state.Asset += revenue;
+}
+
+function use_supplies(sold: number): void {
+    for (const item of Supply_LIST) {
+        supplies[item] -= sold * RECIPE[item];
+    }
+}
+
+function showSupplies(): void {
+    console.log('Supplies left -> Cups: ${supplies.cups} | Ice: ${supplies.ice} | Lemons: ${supplies.lemons} | Sugar: ${supplies.sugar}');
+}
+
+async function buy_supplies(rl: readline.Interface, prices: SupplyCount): Promise<void> {
+    for (const item of SUPPLY_LIST) {
+        while (true) {
+            const answer = await rl.question(`How many ${item} do you want to buy at $${prices[item].toFixed(2)} each? (cash: $${player.Asset.toFixed(2)}) `);
+            const qty = Number(answer);
+
+            if (!Number.isInteger(qty) || qty < 0) {
+                console.log('Please enter a whole number, 0 or higher.');
+                continue;
+            }
+            if (qty * prices[item] > player.Asset) {
+                console.log("You can't afford that many.");
+                continue;
+            }
+
+            purchase_supply(player, item, qty, prices[item]);
+            break;
+        }
+    }
 }
 
 function showStats(p: User_Inventory): void {

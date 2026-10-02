@@ -87,7 +87,7 @@ function use_supplies(sold: number): void {
 }
 
 function showSupplies(): void {
-    console.log('Supplies left -> Cups: ${supplies.cups} | Ice: ${supplies.ice} | Lemons: ${supplies.lemons} | Sugar: ${supplies.sugar}');
+    console.log(`Supplies left -> Cups: ${supplies.cups} | Ice: ${supplies.ice} | Lemons: ${supplies.lemons} | Sugar: ${supplies.sugar}`);
 }
 
 async function buy_supplies(rl: readline.Interface, prices: SupplyCount): Promise<void> {

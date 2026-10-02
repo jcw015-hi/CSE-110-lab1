@@ -151,11 +151,11 @@ async function main(): Promise<void> {
         const glasses = cups_makeable();
         console.log(`\nYou can make ${glasses} glasses with your supplies.`);
 
-        const cents = parseFloat(await rl.question('What price (in cents) do you wish to charge per glass? '));
-
-        if (Number.isNaN(cents) || cents < 0) {
+        let cents: number;
+        while(true) {
+            cents = parseFloat(await rl.question('What price (in cents) do you wish to charge per glass? (e.g. 150 = $1.50) '));
+            if (!Number.isNaN(cents) && cents >= 0) break;
             console.log('Please enter a valid, non-negative number.');
-            continue;
         }
 
         const price_of_lemonade = cents / 100;

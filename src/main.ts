@@ -15,6 +15,24 @@ const player: User_Inventory = {
 
 };
 
+type Weather = 'hot' | 'normal' | 'cold';
+type Supply = 'cups' | 'ice' | 'lemons' | 'sugar';
+type SupplyCount = Record <Supply, number>;
+
+const Supply_LIST: Supply[] = ['cups', 'ice', 'lemons', 'sugar'];
+
+const RECIPE: SupplyCount = { cups: 1, ice: 2, lemons: 1, sugar: 1};
+
+const WEATHER_MULTIPLIES: Record<Weather, number> = {hot: 1.5, normal: 1.0, cold: 0.5};
+
+const WEATHER_MESSAGE: Record<Weather, String> = {
+    hot: 'It is a Hot day, more customers are coming',
+    normal: 'It is a normal day, nothing unusual',
+    cold: 'It is a Cold day, less customers are coming',
+};
+
+const supplies: SupplyCount = {cups: 0, ice: 0, lemons: 0, sugar: 0
+};
 function new_lemon_price(): number {
     return Math.round((Math.random() * 0.5 + 0.1) * 100) / 100; 
 }
@@ -44,6 +62,10 @@ function showStats(p: User_Inventory): void {
   console.log(`Glasses made:    ${p.Glasses_made}`);
   console.log(`Glasses sold:    ${p.Glasses_sold}`);
   console.log("==========================");
+}
+
+function weather() {
+
 }
 
 async function main(): Promise<void> {

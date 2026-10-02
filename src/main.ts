@@ -1,6 +1,7 @@
 import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
 import { User_Inventory, DailyScenario} from './types';
+import { toASCII } from 'punycode';
 
 let day = 1;
 
@@ -33,6 +34,15 @@ const WEATHER_MESSAGE: Record<Weather, String> = {
 
 const supplies: SupplyCount = {cups: 0, ice: 0, lemons: 0, sugar: 0
 };
+
+function New_Supply_Price(): SupplyCount {
+    return {
+        cups: round2(Math.random() * 0.04 + 0.02),
+        ice: round2(Math.random() * 0.03 + 0.01),
+        lemons: new_lemon_price(),
+        sugar: round2(Math.random() * 0.07 + 0.03),
+    };
+}
 function new_lemon_price(): number {
     return Math.round((Math.random() * 0.5 + 0.1) * 100) / 100; 
 }
@@ -44,6 +54,12 @@ function purchase_lemon(game_state: User_Inventory, amount: number, price_lemon:
     game_state.Glasses_made = amount;
 }
 
+function purchase_supply(game_state: User_Inventory, item: Supply, amount: number, price: number): void {
+    const total_cost = round2(amount * price);
+    game_state.Asset = round2(game_state.Asset - total_cost);
+    game_state.Expenses = round2(game_state.Expenses + total_cost);
+    supplies[item] += amount;
+}
 function lemonade_sale(game_state: User_Inventory, amount: number, price_lemonade: number): void {
     const sale = Math.floor(Math.random() * (amount + 1));
     const revenue = sale * price_lemonade;

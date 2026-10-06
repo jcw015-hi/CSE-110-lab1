@@ -120,7 +120,6 @@ function showStats(p: User_Inventory): void {
   console.log(`Price per glass: $${p.Price_per_glass.toFixed(2)}`);
   console.log(`Glasses made:    ${p.Glasses_made}`);
   console.log(`Glasses sold:    ${p.Glasses_sold}`);
-  console.log("==========================");
 }
 
 async function main(): Promise<void> {
